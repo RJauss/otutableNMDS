@@ -1,9 +1,9 @@
 #' get_data_scores
 #' 
-#' Performs NMDS ordination and saves convex hulls for all habitats in hull.data
+#' Performs NMDS ordination and saves convex hulls for specified habitats in `hull.data`
 #' 
 #' @param OTU_Table an OTU table including sample metadata in columns 1-5
-#' @param NMDS which NMDS axes to display. Must give two, e.g. c("NMDS1", "NMDS2")
+#' @param NMDS which NMDS axes to display. Must specify two, e.g. c("NMDS1", "NMDS2")
 #' @param logtransform logical, should abundances be log transformed?
 #' @param relative logical, should relative abundances be used?
 #' @param type one of "Microhabitat" or "TreeSpecies". Returns hull data for either
