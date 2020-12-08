@@ -5,17 +5,15 @@
 \title{get_hull_data}
 \usage{
 get_hull_data(
-  OTU_Table,
+  NMDS_data,
   SampleMetadata,
   NMDS = c(c("NMDS1", "NMDS2"), c("NMDS1", "NMDS3"), c("NMDS2", "NMDS3")),
-  logtransform = T,
-  relative = T,
   habitat = c("Microhabitat", "TreeSpecies"),
   which = c("all", c("Habitat1", "Habitat2", "..."))
 )
 }
 \arguments{
-\item{OTU_Table}{an OTU table with or without sample metadata}
+\item{NMDS_data}{result from the \code{get_NMDS_Ordination} function}
 
 \item{SampleMetadata}{the Metadata for the samples. Can be separate table or
 specified which columns in the OTU table should be used (start and end, e.g. c(1, 5)).
@@ -24,32 +22,36 @@ Must be in beginning of OTU table}
 \item{NMDS}{which NMDS axes to display.
 Must specify two, e.g. c("NMDS1", "NMDS2")}
 
-\item{logtransform}{logical, should abundances be log transformed?}
-
-\item{relative}{logical, should relative abundances be used?}
-
 \item{habitat}{which sample type to draw hull data from.
 Must be a column name in the sample metadata}
 
 \item{which}{which samples to use.
 Must be "all" or vector of specified habitats (see details)}
+
+\item{logtransform}{logical, should abundances be log transformed?}
+
+\item{relative}{logical, should relative abundances be used?}
 }
 \value{
 a dataframe containing the convex hull coordinates for the given habitats
 }
 \description{
-Performs NMDS ordination and saves convex hulls for specified habitats
+Saves convex hulls for specified habitats for plotting with ggplot
 }
 \examples{
 
 data(OTU_Table)
 
-hull.data = get_hull_data(
+NMDS.data = get_NMDS_ordination(
   OTU_Table = OTU_Table, 
   SampleMetadata = c(1, 5),
-  NMDS = c("NMDS1", "NMDS2"), 
   relative = TRUE, 
-  logtransform = TRUE, 
+  logtransform = TRUE)
+  
+hull.data = get_hull_data(
+  NMDS_data = NMDS.data, 
+  SampleMetadata = OTU_Table[,1:5],
+  NMDS = c("NMDS1", "NMDS2"), 
   habitat = "Microhabitat", 
   which = "all")
 

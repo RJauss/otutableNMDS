@@ -17,3 +17,64 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(otutableNMDS)
 ```
+
+# otutableNMDS
+
+This package aims to assist the easy implementation of Nonmetric Multidimensional Scaling (NMDS) plots into `ggplot`.
+
+The package includes an example dataset from [Jauss et al. (2020)]("https://www.frontiersin.org/articles/10.3389/fmicb.2020.592189/") - an OTU abundance table including sample metadata - and three functions:
+
+- `get_NMDS_ordination`: The function takes the OTU table (with or without metadata) and performs the NMDS ordination. The resulting object is needed for the next step:
+- `get_hull_data`: It returns a dataframe containing the coordinates for the convex hull data used for the drawing of polygons in the next function. The user can specify any sample type which the polygons should be drawn around
+- `plot_NMDS`: This is a simple function pasting the hull data to `ggplot2` and drawing polygons around the specified samples or habitats
+
+## Usage 
+
+Here is a simple example of how the package works. Let's first have a look at the example data:
+
+```{r Example data}
+data("OTU_Table")
+
+OTU_Table[1:10, 1:10]
+```
+
+My data has the sample metadate included in columns 1-5, after that comes the species abundance matrix. So we need to specify which columns and which sample(-types) to use in the `get_hull_data` function:
+
+```{r Get Hull Data}
+NMDS.data <- get_NMDS_ordination(OTU_Table = OTU_Table, 
+                                 SampleMetadata = c(1, 5))
+
+hull.data <- get_hull_data(NMDS_data = NMDS.data, 
+                           SampleMetadata = OTU_Table[,1:5], 
+                           NMDS = c("NMDS1", "NMDS2"), 
+                           habitat = "Microhabitat", 
+                           which = "all")
+
+head(hull.data)
+```
+
+The function returns the dataframe with the coordinates neccessary for the polygons to draw around the microhabitats. Let's say we also want the hull data for the tree species, we can easily modify the code like this:
+
+```{r Get Tree Species Hull Data}
+hull.data.TreeSpecies <- get_hull_data(NMDS_data = NMDS.data, 
+                                       SampleMetadata = OTU_Table[,1:5],
+                                       NMDS = c("NMDS1", "NMDS2"), 
+                                       habitat = "TreeSpecies", 
+                                       which = "all")
+```
+
+## Plot NMDS
+
+Both dataframes will now be parsed into the second function, `plot_NMDS`:
+
+```{r Plot NMDS, dpi=300}
+g <- plot_NMDS(hull_data = hull.data, 
+               hull_data2 = hull.data.TreeSpecies, 
+               x = "NMDS1", y = "NMDS2", 
+               group1 = "Microhabitat", 
+               group2 = "TreeSpecies")
+
+g
+```
+
+This is now a very basic ggplot NMDS which can be easily modified and appended. Say you want to highlight canopy and ground habitats with different colors:

@@ -10,7 +10,7 @@
 #' \item{\code{TreeSpecies}}{Species of sampled tree}
 #' \item{\code{Microhabitat}}{Sampled Microhabitat}
 #' \item{\code{Stratum}}{Sampled Stratum}
-#' \item{\code{X...}}{OTU Number and taxonomy}
+#' \item{\code{X[OTU-Number]_[Taxonomy]}}{OTU Abundance}
 #' }
 #' 
 "OTU_Table"

@@ -9,7 +9,8 @@
 #' @param group1 which grouping variable to use, e.g. "Microhabitat"
 #' @param group2 second grouping variable, e.g. "TreeSpecies"
 #' 
-#' @importFrom ggplot2 ggplot aes_string element_text geom_polygon theme
+#' @importFrom ggplot2 ggplot aes_string element_text geom_polygon theme coord_equal
+#' 
 #' 
 #' @export
 #' 
@@ -61,7 +62,8 @@ plot_NMDS = function(hull_data,
     #           color = "grey10") + 
     geom_polygon(data = hull_data2, 
                  aes_string(x=x, y=y, group = group2, color = group2), 
-                 alpha = 0.7, fill = NA, linetype = "dashed", size = 0.7) #+
+                 alpha = 0.7, fill = NA, linetype = "dashed", size = 0.7) +
+    coord_equal()
     #scale_color_manual(values = c("#c2b2b4", "#53687e", "#6b4e71"), 
     #                   labels = levels(group2)) +
     #geom_text(aes(x = 0.25, y = -0.6, label = as.character(paste0(OTU.NMDS.bray$ndim, "D Stress: ", round(as.numeric(OTU.NMDS.bray$stress), digits = 4)))), parse = F, color = "#5d5f66", size = 4) +
