@@ -1,46 +1,73 @@
-#' get_data_scores2
+#' get_hull_data
 #' 
-#' Performs NMDS ordination and saves convex hulls for specified habitats in `hull.data`
+#' Performs NMDS ordination and saves convex hulls for specified habitats
 #' 
-#' @param OTU_Table an OTU table including sample metadata in columns 1-5
-#' @param NMDS which NMDS axes to display. Must specify two, e.g. c("NMDS1", "NMDS2")
+#' @param OTU_Table an OTU table with or without sample metadata
+#' @param SampleMetadata the Metadata for the samples. Can be separate table or 
+#' specified which columns in the OTU table should be used (start and end, e.g. c(1, 5)). 
+#' Must be in beginning of OTU table
+#' @param NMDS which NMDS axes to display. 
+#' Must specify two, e.g. c("NMDS1", "NMDS2")
 #' @param logtransform logical, should abundances be log transformed?
 #' @param relative logical, should relative abundances be used?
-#' @param habitat which sample type to draw hull data from. Must be a column name in the sample metadata
-#' @param which which samples to use. Must be "all" or vector of specified habitats (see details)
+#' @param habitat which sample type to draw hull data from. 
+#' Must be a column name in the sample metadata
+#' @param which which samples to use. 
+#' Must be "all" or vector of specified habitats (see details)
 #' 
 #' @importFrom funrar make_relative
 #' @importFrom vegan vegdist metaMDS scores
 #' @importFrom grDevices chull
+#' @importFrom checkmate assert_vector assert_true
 #' 
 #' @export
 #' 
 #' @examples 
 #' 
 #' data(OTU_Table)
-#' get_data_scores(OTU_Table = OTU_Table, NMDS = c("NMDS1", "NMDS2"), 
-#' relative = T, logtransform = T, habitat = "Microhabitat", which = "all")
+#' 
+#' hull.data = get_hull_data(
+#'   OTU_Table = OTU_Table, 
+#'   SampleMetadata = c(1, 5),
+#'   NMDS = c("NMDS1", "NMDS2"), 
+#'   relative = TRUE, 
+#'   logtransform = TRUE, 
+#'   habitat = "Microhabitat", 
+#'   which = "all")
 #' 
 #' @return 
 #' a dataframe containing the convex hull coordinates for the given habitats
 
-get_data_scores2 = function(OTU_Table, NMDS = c(c("NMDS1", "NMDS2"), 
-                                               c("NMDS1", "NMDS3"), 
-                                               c("NMDS2", "NMDS3")), 
-                           logtransform = T, relative = T, 
-                           habitat = c("Microhabitat", "TreeSpecies"),
-                           which = c("all", c("Habitat1", "Habitat2", "..."))){
+get_hull_data = function(OTU_Table, 
+                         SampleMetadata,
+                         NMDS = c(c("NMDS1", "NMDS2"), 
+                                  c("NMDS1", "NMDS3"), 
+                                  c("NMDS2", "NMDS3")), 
+                         logtransform = T, 
+                         relative = T, 
+                         habitat = c("Microhabitat", "TreeSpecies"),
+                         which = c("all", c("Habitat1", "Habitat2", "..."))){
   #match.arg(arg = type, choices = c("TreeSpecies", "Microhabitat"))
+  assert_vector(x = NMDS, len = 2)
   # extract species matrix and sample metadata from OTU_Table
-  species = OTU_Table[,6:ncol(OTU_Table)]
-  species_mat = as.matrix(species)
+  # if SampleMetadata is specified as column numbers, use these
+  if(is.numeric(SampleMetadata)){
+    SampleMetadataColumns = SampleMetadata
+    SampleMetadata = as.data.frame(OTU_Table[,min(SampleMetadataColumns):max(SampleMetadataColumns)])
+    species_mat = as.matrix(OTU_Table[,(max(SampleMetadataColumns) + 1):ncol(OTU_Table)])
+  } else{
+    SampleMetadata = as.data.frame(SampleMetadata)
+    species_mat = as.matrix(OTU_Table)
+  }
+  
+  assert_true(habitat %in% colnames(SampleMetadata))
+  
   if(relative == T){
     species_mat = make_relative(species_mat)
   }
   if(logtransform == T){
     species_mat = log(species_mat +1)
   }
-  SampleMetadata = as.data.frame(OTU_Table[,1:5])
   
   # calculate distance matrix with vegdist
   Dist = vegdist(species_mat, 
@@ -63,7 +90,7 @@ get_data_scores2 = function(OTU_Table, NMDS = c(c("NMDS1", "NMDS2"),
   data.scores$TreeSpecies = SampleMetadata$TreeSpecies
   
   # calculate hull data for specified habitats
-  if(which == "all"){
+  if(length(which) == 1 && which == "all"){
     habitatvector = levels(OTU_Table[,habitat])
   } else{
     habitatvector = which
