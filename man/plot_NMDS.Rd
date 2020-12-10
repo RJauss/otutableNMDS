@@ -4,20 +4,24 @@
 \alias{plot_NMDS}
 \title{plot_NMDS}
 \usage{
-plot_NMDS(hull_data, hull_data2, x, y, group1, group2)
+plot_NMDS(hull_data, hull_data2 = NULL, NMDS_data, x, y, habitat,
+  habitat2 = NULL)
 }
 \arguments{
-\item{hull_data}{the result of the \code{get_hull_data} function}
+\item{hull_data}{the result of the \code{\link[otutableNMDS]{get_hull_data}} function}
 
-\item{hull_data2}{additional hull data if you want to plot several types}
+\item{hull_data2}{optional additional hull data if you want to plot several types}
+
+\item{NMDS_data}{the result of the \code{\link[otutableNMDS]{get_NMDS_ordination}} function}
 
 \item{x}{first NMDS axis to display, e.g. "NMDS1"}
 
 \item{y}{second NMDS axis to display, e.g. "NMDS2"}
 
-\item{group1}{which grouping variable to use, e.g. "Microhabitat"}
+\item{habitat}{which grouping variable to use, e.g. "Microhabitat".
+Must be the same habitat used in the \code{\link[otutableNMDS]{get_hull_data}} function}
 
-\item{group2}{second grouping variable, e.g. "TreeSpecies"}
+\item{habitat2}{optional second grouping variable, e.g. "TreeSpecies"}
 }
 \value{
 a ggplot object with the convex hull as polygons
@@ -28,26 +32,35 @@ Plots NMDS ordination based on convex hull data generated from \code{get_hull_da
 \examples{
 data(OTU_Table)
 
-hull.data = get_hull_data(
+NMDS.data = get_NMDS_ordination(
   OTU_Table = OTU_Table, 
   SampleMetadata = c(1, 5),
-  NMDS = c("NMDS1", "NMDS2"), 
   relative = TRUE, 
   logtransform = TRUE, 
+  k = 3, 
+  trymax = 100)
+
+hull.data = get_hull_data(
+  NMDS_data = NMDS.data, 
+  SampleMetadata = OTU_Table[,1:5],
+  NMDS = c("NMDS1", "NMDS2"), 
   habitat = "Microhabitat", 
   which = "all")
 
 hull.data.TreeSpecies = get_hull_data(
-  OTU_Table = OTU_Table, 
-  SampleMetadata = c(1, 5),
+  NMDS_data = NMDS.data, 
+  SampleMetadata = OTU_Table[,1:5],
   NMDS = c("NMDS1", "NMDS2"), 
-  relative = TRUE, 
-  logtransform = TRUE, 
   habitat = "TreeSpecies", 
   which = "all")
   
-g = plot_NMDS(hull_data = hull.data, hull_data2 = hull.data.TreeSpecies, 
-  x = "NMDS1", y = "NMDS2", 
-  group1 = "Microhabitat", group2 = "TreeSpecies")
+g = plot_NMDS(
+  hull_data = hull.data, 
+  hull_data2 = hull.data.TreeSpecies, 
+  NMDS_data = NMDS.data,
+  x = "NMDS1", 
+  y = "NMDS2", 
+  habitat = "Microhabitat", 
+  habitat2 = "TreeSpecies")
 
 }

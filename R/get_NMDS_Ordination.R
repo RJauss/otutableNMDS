@@ -2,35 +2,53 @@
 #' 
 #' Performs NMDS ordination and saves it in a dataframe
 #' 
-#' @param OTU_Table an OTU table with or without sample metadata
+#' @param OTU_Table an OTU table with or without sample metadata (see
+#' "SampleMetadata" for details)
 #' @param SampleMetadata the Metadata for the samples. Can be separate table or 
 #' specified which columns in the OTU table should be used (start and end, e.g. c(1, 5)). 
-#' Must be in beginning of OTU table
+#' Must be in beginning of OTU table. If specifying a separate table, the 
+#' OTU table must not contain metadata. See "Examples"
 #' @param logtransform logical, should abundances be log transformed?
 #' @param relative logical, should relative abundances be used?
+#' @param k number of axes to display. See \code{\link[vegan]{metaMDS}}
+#' @param trymax max number of iterations. See \code{\link[vegan]{metaMDS}}
+#' @param ... arguments passed to \code{\link[vegan]{metaMDS}}
 #' 
 #' @importFrom funrar make_relative
 #' @importFrom vegan vegdist metaMDS scores
+#' @importFrom checkmate expect_numeric
 #' 
 #' @export
 #' 
 #' @examples 
-#' 
-#' data(OTU_Table)
-#' 
+#' # Specifying SampleMetadata columns in OTU Table
 #' NMDS.data = get_NMDS_ordination(
 #'   OTU_Table = OTU_Table, 
 #'   SampleMetadata = c(1, 5),
 #'   relative = TRUE, 
-#'   logtransform = TRUE)
+#'   logtransform = TRUE, 
+#'   k = 3, 
+#'   trymax = 100)
+#'   
+#' # Specifying SampleMetadata as separate table
+#' NMDS.data = get_NMDS_ordination(
+#'   OTU_Table = OTU_Table[,6:ncol(OTU_Table)], 
+#'   SampleMetadata = OTU_Table[,1:5],
+#'   relative = TRUE, 
+#'   logtransform = TRUE, 
+#'   k = 3, 
+#'   trymax = 100)
 #' 
 #' @return 
-#' a dataframe containing NMDS ordination
+#' a list of class `metaMNDS` containing NMDS ordination
 
 get_NMDS_ordination = function(OTU_Table, 
                          SampleMetadata,
                          logtransform = T, 
-                         relative = T){
+                         relative = T,
+                         k = 3, 
+                         trymax = 100, 
+                         ...){
   
   # extract species matrix and sample metadata from OTU_Table
   # if SampleMetadata is specified as column numbers, use these
@@ -45,8 +63,9 @@ get_NMDS_ordination = function(OTU_Table,
     species_mat = as.matrix(OTU_Table)
   }
   
-  # check for correct sample specification (must be a column in the metadata)
-  #assert_true(habitat %in% colnames(SampleMetadata))
+  # check for numeric OTU table. If not, it probably contains metadata
+  expect_numeric(species_mat[,1], 
+                 info = "species matrix contains characters. Does it still include metadata? see `?get_NMDS_ordination`")
   
   # make relative if specified
   if(relative == T){
@@ -58,18 +77,11 @@ get_NMDS_ordination = function(OTU_Table,
     species_mat = log(species_mat +1)
   }
   
-  # calculate distance matrix with vegdist
-  Dist = vegdist(species_mat, 
-                 diag = T, 
-                 na.rm = T)
-  
-  # perform Non-metric Multidimensional Scaling
-  OTU.NMDS.bray = metaMDS(Dist, # The distance matrix
-                          k=3, # How many dimensions/axes to display 
-                          trymax=100, # max number of iterations
-                          wascores=TRUE, # Weighted species scores
-                          trace=TRUE,
-                          zerodist="add") # What to do with 0's after sqrt transformation
+  # perform NMDS ordination
+  OTU.NMDS = metaMDS(species_mat,
+                          k = k, 
+                          trymax = trymax, 
+                          ...)
 
-  return(OTU.NMDS.bray)
+  return(OTU.NMDS)
   }

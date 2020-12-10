@@ -4,8 +4,7 @@
 \name{OTU_Table}
 \alias{OTU_Table}
 \title{OTU_Table}
-\format{
-A data frame with several variables:
+\format{A data frame with several variables:
 
 \describe{
 \item{\code{SampleID}}{Unique sample identificatior}
@@ -14,8 +13,7 @@ A data frame with several variables:
 \item{\code{Microhabitat}}{Sampled Microhabitat}
 \item{\code{Stratum}}{Sampled Stratum}
 \item{\code{X[OTU-Number]_[Taxonomy]}}{OTU Abundance}
-}
-}
+}}
 \usage{
 OTU_Table
 }

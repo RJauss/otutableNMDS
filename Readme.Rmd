@@ -1,38 +1,36 @@
 ---
-title: "overview"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{overview}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "Readme"
+output: github_document
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
-```{r setup}
-library(otutableNMDS)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # otutableNMDS
 
 This package aims to assist the easy implementation of Nonmetric Multidimensional Scaling (NMDS) plots into `ggplot`.
 
-The package includes an example dataset from [Jauss et al. (2020)]("https://www.frontiersin.org/articles/10.3389/fmicb.2020.592189/") - an OTU abundance table including sample metadata - and three functions:
+The package includes an example dataset from [Jauss et al. (2020)]("https://www.frontiersin.org/articles/10.3389/fmicb.2020.592189/") (an OTU abundance table including sample metadata) and three functions:
 
 - `get_NMDS_ordination`: The function takes the OTU table (with or without metadata) and performs the NMDS ordination. The resulting object is needed for the next step:
 - `get_hull_data`: It returns a dataframe containing the coordinates for the convex hull data used for the drawing of polygons in the next function. The user can specify any sample type which the polygons should be drawn around
 - `plot_NMDS`: This is a simple function pasting the hull data to `ggplot2` and drawing polygons around the specified samples or habitats
+
+## Installation
+
+You can easily install this package with `devtools` like this:
+
+```{r Installation, eval=FALSE}
+devtools::install_github('RJauss/otutableNMDS', ref = "HEAD")
+```
 
 ## Usage 
 
 Here is a simple example of how the package works. Let's first have a look at the example data:
 
 ```{r Example data}
+library(otutableNMDS)
 data("OTU_Table")
 
 OTU_Table[1:10, 1:10]
@@ -81,7 +79,7 @@ hull.data.TreeSpecies <- get_hull_data(NMDS_data = NMDS.data,
 
 Now call the `plot_NMDS` again and specify both hull.datas. The second one will be plotted on top with non-filled polygons:
 
-```{r Plot NMDS two dataframes}
+```{r Plot NMDS two dataframes, dpi=300}
 g <- plot_NMDS(hull_data = hull.data, 
                hull_data2 = hull.data.TreeSpecies, 
                NMDS_data = NMDS.data, 

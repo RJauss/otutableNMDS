@@ -5,7 +5,9 @@ test_that("output is a ggplot object", {
     OTU_Table = OTU_Table, 
     SampleMetadata = c(1, 5),
     relative = TRUE, 
-    logtransform = TRUE)
+    logtransform = TRUE, 
+    k = 3, 
+    trymax = 100)
   
   hull.data <- get_hull_data(NMDS_data = NMDS.data, 
                              SampleMetadata = OTU_Table[,1:5], 
@@ -19,9 +21,13 @@ test_that("output is a ggplot object", {
                              habitat = "TreeSpecies", 
                              which = "all")
   
-  g = plot_NMDS(hull_data = hull.data, hull_data2 = hull.data.TreeSpecies, 
-                x = "NMDS1", y = "NMDS2", 
-                group1 = "Microhabitat", group2 = "TreeSpecies")
+  g = plot_NMDS(hull_data = hull.data, 
+                hull_data2 = hull.data.TreeSpecies, 
+                NMDS_data = NMDS.data, 
+                x = "NMDS1", 
+                y = "NMDS2",
+                habitat = "Microhabitat", 
+                habitat2 = "TreeSpecies")
   
   expect_s3_class(g, "ggplot")
 })
