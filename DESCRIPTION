@@ -1,5 +1,5 @@
 Package: otutableNMDS
-Title: ggplot implementation for Nonmetric Multidimensional Scaling for OTU abundance tables
+Title: ggplot implementation for Nonmetric Multidimensional Scaling of OTU abundance tables
 Version: 1.0.0
 Authors@R: 
     person(given = "Robin-Tobias",

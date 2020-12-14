@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This package aims to assist the easy implementation of Nonmetric Multidimensional Scaling (NMDS) plots into `ggplot`.
 
-The package includes an example dataset from [Jauss et al. (2020)]("https://www.frontiersin.org/articles/10.3389/fmicb.2020.592189/"), an OTU abundance table including sample metadata, and three functions:
+The package includes an example dataset from [Jauss et al. 2020](https://www.frontiersin.org/articles/10.3389/fmicb.2020.592189/), which is an OTU abundance table including sample metadata, and three functions:
 
 - `get_NMDS_ordination`: The function takes the OTU table (with or without metadata) and performs the NMDS ordination. The resulting object is needed for the next step:
 - `get_hull_data`: It returns a dataframe containing the coordinates for the convex hull data used for the drawing of polygons in the next function. The user can specify any sample type which the polygons should be drawn around

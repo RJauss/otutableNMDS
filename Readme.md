@@ -7,8 +7,9 @@ This package aims to assist the easy implementation of Nonmetric
 Multidimensional Scaling (NMDS) plots into `ggplot`.
 
 The package includes an example dataset from [Jauss et
-al. (2020)](%22https://www.frontiersin.org/articles/10.3389/fmicb.2020.592189/%22),
-an OTU abundance table including sample metadata, and three functions:
+al. 2020](https://www.frontiersin.org/articles/10.3389/fmicb.2020.592189/),
+which is an OTU abundance table including sample metadata, and three
+functions:
 
   - `get_NMDS_ordination`: The function takes the OTU table (with or
     without metadata) and performs the NMDS ordination. The resulting
@@ -87,12 +88,12 @@ head(hull.data)
 ```
 
     ##          NMDS1      NMDS2      NMDS3 site  Microhabitat
-    ## 10  0.52012052 -0.9101468 -0.2091332   10 Arboreal Soil
-    ## 36  0.14212187 -0.6573375 -0.2788176   36 Arboreal Soil
-    ## 23 -0.13007877 -0.4363868  0.8153256   23 Arboreal Soil
-    ## 16 -0.38765998  0.1615132 -0.6834027   16 Arboreal Soil
-    ## 3   0.46972551  0.3096684 -0.9899930    3 Arboreal Soil
-    ## 49  0.02496164 -0.1972875  0.1770371   49          Bark
+    ## 10  0.52019236 -0.9101673 -0.2069323   10 Arboreal Soil
+    ## 36  0.14206562 -0.6572729 -0.2794746   36 Arboreal Soil
+    ## 23 -0.13023534 -0.4368888  0.8148968   23 Arboreal Soil
+    ## 16 -0.38727621  0.1618064 -0.6832429   16 Arboreal Soil
+    ## 3   0.46977397  0.3016228 -0.9926107    3 Arboreal Soil
+    ## 49  0.02501816 -0.1959304  0.1791760   49          Bark
 
 The function returns the dataframe with the coordinates neccessary for
 the polygons to draw around the microhabitats.
