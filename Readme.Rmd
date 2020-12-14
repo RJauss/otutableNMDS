@@ -33,16 +33,22 @@ Here is a simple example of how the package works. Let's first have a look at th
 library(otutableNMDS)
 data("OTU_Table")
 
-OTU_Table[1:10, 1:10]
+tibble::as_tibble(OTU_Table[1:10, 1:10])
 ```
 
-My data has the sample metadate included in columns 1-5, after that comes the species abundance matrix. So we need to specify which columns and which sample(-types) to use in the `get_hull_data` function:
+My data has the sample metadata included in columns 1-5, after that comes the species abundance matrix. So we need to specify which columns and which sample(-types) to use in the `get_hull_data` function. But first we run the `get_NMDS_ordination` function which uses the `metaMDS` function from `vegan`:
 
-```{r Get Hull Data}
+```{r Get NMDS Ordination, message=FALSE, results='hide'}
 NMDS.data <- get_NMDS_ordination(OTU_Table = OTU_Table, 
                                  SampleMetadata = c(1, 5), 
+                                 logtransform = T, 
+                                 relative = T, 
                                  k = 3)
+# Note that you can specify further arguments which will be passes
+# to metaMDS(), for example "distance = 'jaccard'" etc
+```
 
+```{r}
 hull.data <- get_hull_data(NMDS_data = NMDS.data, 
                            SampleMetadata = OTU_Table[,1:5], 
                            NMDS = c("NMDS1", "NMDS2"), 
@@ -67,7 +73,9 @@ g <- plot_NMDS(hull_data = hull.data,
 g
 ```
 
-Let's say we also want the hull data for the tree species, we can easily modify the code like this:
+## Plot additional NMDS on top
+
+Let's say we also want the hull data for the tree species, we can easily modify the code like this and plot a second ordination on top:
 
 ```{r Get Tree Species Hull Data}
 hull.data.TreeSpecies <- get_hull_data(NMDS_data = NMDS.data, 
