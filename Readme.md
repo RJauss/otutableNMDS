@@ -87,12 +87,12 @@ head(hull.data)
 ```
 
     ##         NMDS1      NMDS2      NMDS3 site  Microhabitat
-    ## 10  0.5158977 -0.9071205 -0.2233777   10 Arboreal Soil
-    ## 36  0.1411887 -0.6528387 -0.2759070   36 Arboreal Soil
-    ## 23 -0.1286047 -0.4363612  0.8141746   23 Arboreal Soil
-    ## 16 -0.3790621  0.1012418 -0.7022891   16 Arboreal Soil
-    ## 3   0.4699488  0.4264151 -0.9427250    3 Arboreal Soil
-    ## 49  0.0241093 -0.2087880  0.1625382   49          Bark
+    ## 3   0.4693419 -0.3128820  0.9876154    3 Arboreal Soil
+    ## 16 -0.3847191 -0.1508528  0.6863728   16 Arboreal Soil
+    ## 23 -0.1301951  0.4451097 -0.8093714   23 Arboreal Soil
+    ## 36  0.1415571  0.6521789  0.2878761   36 Arboreal Soil
+    ## 10  0.5195426  0.9079487  0.2094761   10 Arboreal Soil
+    ## 35 -0.5825956 -0.3790666 -0.0228569   35          Bark
 
 The function returns the dataframe with the coordinates neccessary for
 the polygons to draw around the microhabitats.
